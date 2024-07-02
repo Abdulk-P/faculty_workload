@@ -1,3 +1,5 @@
+HOW TO USE THIS PROJECT USING CLONE METHOD
+
 first setup a Virtual Environment using this Command in terminal
     -->python -m .venv env
 
