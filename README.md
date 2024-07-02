@@ -1,19 +1,19 @@
 HOW TO USE THIS PROJECT USING CLONE METHOD
 
-first setup a Virtual Environment using this Command in terminal
-    -->python -m .venv env
+first setup a Virtual Environment using this Command in the Terminal
+    -->python -m venv .env
 
-then activate the Virtual envrionment using this command 
+then activate the Virtual environment using this command 
     -->.env/scripts/activate
     
 my project folder is facutly_workload
 and App is workload 
 
-then go to facutly workload folder
-    --> cd facutly-workload
-install django
+then go to the faculty workload folder
+    --> cd faculty-workload
+install Django
 --> pip install django
-in Django setting everything wiil be same if you clone this  project only you have to change the Database Configuration in in project folder -- > settings.py
+in the Django setting everything will be same if you clone this  project only you have to change the Database Configuration in the project folder -- > settings.py
 
 DATABASES = {
     'default': {
@@ -34,4 +34,4 @@ and run this command for initializing the Database
  then run ther server
  --> python manage.py runserver
 
- make sure you are in faculty-workload folder where project file , app and  manage.py is located
+ make sure you are in the faculty-workload folder where the project file, app, and  manage.py are located
