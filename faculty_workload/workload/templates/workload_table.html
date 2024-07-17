@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Workload</title>
+        
+
+</head>
+<body>
+    <h1>Faculty Workload</h1>
+    <a href="{% url 'add_faculty' %}" class="btn btn-primary">Add Faculty</a>
+    <a href="{% url 'add_workload' %}" class="btn btn-primary">Add Workload</a>
+
+    <h2>Detailed Workloads</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Faculty Name</th>
+                <th>Department</th>
+                <th>Course</th>
+                <th>Teaching Hours</th>
+                <th>Research Hours</th>
+                <th>Administrative duties</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for workload in workloads %}
+                <tr>
+                    <td>{{ workload.faculty.name }}</td>
+                    <td>{{ workload.faculty.department }}</td>
+                    <td>{{ workload.course }}</td>
+                    <td>{{ workload.teaching_hours }}</td>
+                    <td>{{ workload.research_hours }}</td>
+                    <td>{{ workload.admin_hours }}</td>
+                    <td>
+                        <a href="{% url 'update_workload' workload.id %}" class="btn btn-warning">Update</a>
+                        <a href="{% url 'delete_workload' workload.id %}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Workload Distribution</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Faculty Name</th>
+                <th>Department</th>
+                <th>Teaching Hours</th>
+                <th>Research Hours</th>
+                <th>Administrative duties</th>
+                <th>Total Hours</th>
+                <th>Score (%)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for faculty in faculty_workloads %}
+                <tr>
+                    <td>{{ faculty.name }}</td>
+                    <td>{{ faculty.department }}</td>
+                    <td>{{ faculty.teaching_hours }}</td>
+                    <td>{{ faculty.research_hours }}</td>
+                    <td>{{ faculty.admin_hours }}</td>
+                    <td>{{ faculty.total_hours }}</td>
+                    <td>{{ faculty.score|floatformat:2 }}%</td>
+                    <td>
+                        <a href="{% url 'update_workload' faculty.id %}" class="btn btn-warning">Update</a>
+                        <a href="{% url 'delete_workload' faculty.id %}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+</body>
+</html>

@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,19 +11,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Workload</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Include Chart.js from your local static files -->
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
+
+
 </head>
 <body>
+
+
+
+{% block content %}
+<!-- Your existing content for the index page -->
+
     <div class="container">
-        <h1 class="my-4">Faculty Workload</h1>
-        <a href="{% url 'add_faculty' %}" class="btn btn-primary mb-4">Add Faculty</a>
-        <a href="{% url 'add_workload' %}" class="btn btn-primary mb-4">Add Workload</a>
+        {% comment %} <h1 class="my-4">Faculty Workload</h1> {% endcomment %}
+        {% comment %} <a href="{% url 'add_faculty' %}" class="btn btn-primary">Add Faculty</a> {% endcomment %}
+        {% comment %} <a href="{% url 'add_workload' %}" class="btn btn-primary">Add Workload</a> {% endcomment %}
+        <h2 class="my-4">Detailed Workloads</h2>
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Faculty Name</th>
                     <th>Department</th>
                     <th>Course</th>
-                    <th>Hours</th>
+                    <th>Teaching Hours</th>
+                    <th>Research Hours</th>
+                    <th>Administrative duties</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,14 +54,66 @@
                     <td>{{ workload.faculty.name }}</td>
                     <td>{{ workload.faculty.department }}</td>
                     <td>{{ workload.course }}</td>
-                    <td>{{ workload.hours }}</td>
+                    <td>{{ workload.teaching_hours }}</td>
+                    <td>{{ workload.research_hours }}</td>
+                    <td>{{ workload.admin_hours }}</td>
+                    <td>
+                        <a href="{% url 'update_workload' workload.id %}" class="btn btn-warning btn-sm">Update</a>
+                        <a href="{% url 'delete_workload' workload.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        <h2 class="my-4">Workload Distribution</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Faculty Name</th>
+                    <th>Department</th>
+                    <th>Teaching Hours</th>
+                    <th>Research Hours</th>
+                    <th>Administrative duties</th>
+                    <th>Total Hours</th>
+                    <th>Score (%)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for workload in faculty_workloads %}
+                <tr>
+                    <td>{{ workload.faculty__name }}</td>
+                    <td>{{ workload.faculty__department }}</td>
+                    <td>{{ workload.total_teaching_hours }}</td>
+                    <td>{{ workload.total_research_hours }}</td>
+                    <td>{{ workload.total_admin_hours }}</td>
+                    <td>{{ workload.total_hours }}</td>
+                    <td>{{ workload.score_percentage }}%</td>
+                    <td>
+                        <a href="{% url 'update_workload' workload.id %}" class="btn btn-warning btn-sm">Update</a>
+                        <a href="{% url 'delete_workload' workload.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        <h2 class="my-4">Faculty Workload System</h2>
+        <a href="{% url 'workload_visualization' %}">View Workload Visualization</a>
+
+
     </div>
+
+
+    
+
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {% endblock %}
 </body>
 </html>

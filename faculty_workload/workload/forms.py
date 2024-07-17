@@ -9,4 +9,4 @@ class FacultyForm(forms.ModelForm):
 class WorkloadForm(forms.ModelForm):
     class Meta:
         model = Workload
-        fields = ['faculty', 'course', 'hours']
+        fields = ['faculty', 'teaching_hours', 'course', 'research_hours', 'admin_hours']

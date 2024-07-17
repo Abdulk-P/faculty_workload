@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Workload Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .chart-container {
+            width: 400px;
+            height: 400px;
+            margin: auto;
+        }
+
+        h2{
+            text-align:left;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <h1 class="text-center">Faculty Workload Visualization</h1>
+    
+    <h2 class="fst-italic">Bar Chart: Detailed Workloads</h2>
+    <div class="chart-container">
+        <canvas id="workloadBarChart" width="400" height="200"></canvas>
+    </div>
+    
+    <h2>Pie Chart: Total Score Comparison</h2>
+    <div class="chart-container">
+        <canvas id="workloadPieChart"></canvas>
+    </div>
+
+    <script>
+        // Passing data to JavaScript variables
+        var facultyNames = {{ faculty_names|safe }};
+        var scores = {{ scores|safe }};
+
+        // Debugging
+        console.log("Faculty Names:", facultyNames);
+        console.log("Scores:", scores);
+
+        // Bar Chart
+        var ctxBar = document.getElementById('workloadBarChart').getContext('2d');
+        var barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: facultyNames,
+                datasets: [
+                    {
+                        label: 'Scores (%)',
+                        data: scores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+
+        // Pie Chart
+        var ctxPie = document.getElementById('workloadPieChart').getContext('2d');
+        var pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: facultyNames,
+                datasets: [{
+                    data: scores,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        // Add more colors if there are more faculties
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        // Add more colors if there are more faculties
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return facultyNames[tooltipItem.dataIndex] + ': ' + scores[tooltipItem.dataIndex].toFixed(2) + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    
+
+
+</body>
+</html>
