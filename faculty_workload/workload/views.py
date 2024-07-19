@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Faculty, Workload
 from .forms import FacultyForm, WorkloadForm
@@ -5,6 +7,81 @@ from django.db.models import Sum, F
 import csv
 from django.http import HttpResponse
 import json
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from .forms import UserForm, Profile
+
+from .models import Profile
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Profile.objects.create(user=user)  # Ensure profile is created
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+    return render(request, 'sign_in.html', {'form': form})
+
+
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile was successfully updated!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+
+
+
+# def signup_view(request):
+    # if request.method == 'POST':
+        # form = UserCreationForm(request.POST)
+        # if form.is_valid():
+            # user = form.save()
+            # login(request, user)
+            # messages.success(request, 'Registration successful.')
+            # return redirect('index')
+        # else:
+            # messages.error(request, 'Registration failed. Please try again.')
+    # else:
+        # form = UserCreationForm()
+    # return render(request, 'sign_in.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+
+
+
 
 
 
@@ -12,25 +89,25 @@ import json
 def home(request):
     return render(request, 'index.html')
 
-# Add Faculty view
+@login_required
 def add_faculty(request):
     if request.method == 'POST':
         # Logic to add a new faculty
-        return redirect('home')
+        return redirect('index')
     return render(request, 'add_faculty.html')
 
-# Add Workload view
+@login_required
 def add_workload(request):
     if request.method == 'POST':
         # Logic to add a new workload
-        return redirect('home')
+        return redirect('index')
     return render(request, 'add_workload.html')
 
 # Contact Us view
 def contact_us(request):
     if request.method == 'POST':
         # Logic to handle contact form submission
-        return redirect('home')
+        return redirect('index')
     return render(request, 'contact_us.html')
 
 # About Us view
@@ -38,18 +115,6 @@ def about_us(request):
     return render(request, 'about_us.html')
 
 # Login view
-def login_view(request):
-    if request.method == 'POST':
-        # Logic to handle login
-        return redirect('home')
-    return render(request, 'login.html')
-
-# Sign In view
-def sign_in_view(request):
-    if request.method == 'POST':
-        # Logic to handle sign in
-        return redirect('home')
-    return render(request, 'sign_in.html')
 
 
 def index(request):

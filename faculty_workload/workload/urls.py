@@ -2,6 +2,10 @@ from django.urls import path
 from . import views
 from .views import export_workload_data
 from django.views.generic import TemplateView
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as auth_views
+
+
 
 
 
@@ -19,8 +23,14 @@ urlpatterns = [
 
     path('contact_us/', views.contact_us, name='contact_us'),
     path('about_us/', views.about_us, name='about_us'),
+    #path('login/', views.login_view, name='login'),
+    #path('sign_in/', views.sign_in_view, name='sign_in'),
+
+    path('signup/', views.signup_view, name='sign_in'),
     path('login/', views.login_view, name='login'),
-    path('sign_in/', views.sign_in_view, name='sign_in'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/', views.profile_view, name='profile'),
+
 
 
 ]
